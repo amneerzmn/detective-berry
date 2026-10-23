@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detective Berry's Fruit Hunt</title>
+<style>
+:root{
+ --pink:#f6c8d5;--pink2:#ffeaf0;--mint:#cfead4;--mint2:#eff9f0;
+ --peach:#ffe3b5;--lilac:#ded1f5;--cream:#fffaf1;--plum:#493650;
+ --purple:#79549b;--green:#43845c;--coral:#dc7892;--white:#fff;
+ --shadow:0 12px 32px rgba(80,54,87,.10)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--plum);font-family:"Trebuchet MS",Arial,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #65418a;outline-offset:3px}
+.site-header{position:sticky;top:0;z-index:20;background:rgba(255,250,241,.94);backdrop-filter:blur(10px);border-bottom:1px solid #efdfeb}
+.nav-wrap{max-width:1120px;margin:auto;padding:12px 18px;display:flex;align-items:center;gap:14px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:9px;border:0;background:none;color:var(--plum);font-weight:900;text-align:left}
+.brand-berry{width:42px;height:42px;border-radius:15px;background:var(--pink2);display:grid;place-items:center;font-size:25px}
+.brand small{display:block;font-size:11px;letter-spacing:.08em;color:#886b91;text-transform:uppercase}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.nav-links button{border:0;background:transparent;color:#6f5b77;border-radius:12px;padding:9px 11px;font-size:13px;font-weight:800}
+.nav-links button.active,.nav-links button:hover{background:var(--lilac);color:#52396c}
+main{max-width:1120px;margin:auto;padding:24px 18px 54px}
+.page{display:none;animation:fadeIn .35s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.hero{position:relative;overflow:hidden;min-height:420px;border-radius:34px;padding:clamp(26px,5vw,58px);display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:20px;background:linear-gradient(135deg,#ffe8ef 0%,#fff1d5 50%,#e8ddfb 100%);box-shadow:var(--shadow)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #ead2e8;background:#ffffffb8;border-radius:99px;padding:8px 13px;font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(36px,5.8vw,64px);line-height:1.03;letter-spacing:-.04em;margin:18px 0}
+h1 span{color:var(--purple)}
+h2{font-size:clamp(27px,4vw,38px);letter-spacing:-.025em;margin-bottom:10px}
+h3{font-size:20px;margin-bottom:8px}
+.lead{font-size:17px;line-height:1.7;max-width:590px;color:#67536d}
+.hero-actions,.button-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.btn{border:0;border-radius:15px;padding:13px 18px;font-weight:900;transition:transform .15s,filter .15s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{transform:translateY(-2px);filter:brightness(.98)}
+.btn-primary{background:var(--purple);color:white;box-shadow:0 6px 0 #5e417a}
+.btn-secondary{background:white;color:var(--plum);border:1px solid #ead9e9}
+.btn-mint{background:var(--mint);color:#315f40}
+.hero-art{position:relative;display:grid;place-items:center;min-height:280px}
+.berry-mascot{font-size:clamp(115px,17vw,190px);filter:drop-shadow(0 15px 8px #8d587b22);animation:bob 3s ease-in-out infinite;position:relative;z-index:2}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+.orbit{position:absolute;border-radius:50%;display:grid;place-items:center;animation:orbitBob 4s ease-in-out infinite}
+.orbit.one{width:76px;height:76px;top:16px;left:10%;background:#fff9d9;font-size:42px}
+.orbit.two{width:70px;height:70px;right:6%;top:22%;background:#e0f4e1;font-size:38px;animation-delay:.7s}
+.orbit.three{width:75px;height:75px;bottom:8px;left:18%;background:#f9dce6;font-size:39px;animation-delay:1.2s}
+@keyframes orbitBob{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(9px) rotate(6deg)}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.stat{background:#fff;border:1px solid #f0e4ee;border-radius:19px;padding:16px;text-align:center}
+.stat strong{display:block;font-size:25px;color:var(--purple)}
+.stat span{font-size:12px;color:#7d6b82;font-weight:800}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:8px 0 22px}
+.section-head p{color:#796982;margin:0;line-height:1.6}
+.kicker{color:var(--coral);font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:900;margin-bottom:8px}
+.panel{background:#fff;border:1px solid #efdfed;border-radius:25px;padding:clamp(18px,3vw,28px);box-shadow:var(--shadow);margin:18px 0}
+.story-layout{display:grid;grid-template-columns:1fr .8fr;gap:20px;align-items:center}
+.story-card{background:linear-gradient(140deg,#fff0f4,#fff8e7);border-radius:24px;padding:24px;line-height:1.8}
+.big-icon{font-size:100px;text-align:center;filter:drop-shadow(0 10px 8px #76549b18)}
+.clue-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}
+.clue{border:1px dashed #d7bcd9;background:#fff;border-radius:16px;padding:13px;text-align:center}
+.clue span{display:block;font-size:30px;margin-bottom:6px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.fruit-card{border:1px solid #f0e2ee;border-radius:23px;background:#fff;padding:19px;transition:transform .18s,box-shadow .18s}
+.fruit-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.fruit-top{display:flex;align-items:center;gap:13px;margin-bottom:12px}
+.fruit-emoji{width:68px;height:68px;flex-shrink:0;border-radius:22px;background:var(--pink2);display:grid;place-items:center;font-size:39px}
+.fruit-card:nth-child(2) .fruit-emoji{background:#fff2ce}
+.fruit-card:nth-child(3) .fruit-emoji{background:#ffe5d6}
+.fruit-card:nth-child(4) .fruit-emoji{background:#eee5ff}
+.fruit-card:nth-child(5) .fruit-emoji{background:#e0f4e2}
+.fruit-card:nth-child(6) .fruit-emoji{background:#fff0d9}
+.fruit-card p{font-size:14px;line-height:1.65;color:#76667c;margin-bottom:10px}
+.fact{background:#f5f0fb;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:800}
+.pill{display:inline-block;border-radius:99px;background:#f4e9fa;padding:6px 10px;font-size:11px;font-weight:900;color:#70538b}
+.mission-map{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.mission{background:white;border:1px solid #eee0ed;border-radius:20px;padding:17px;text-align:left;color:var(--plum);min-height:140px}
+.mission:hover{border-color:#bda7df;transform:translateY(-2px)}
+.mission .num{font-size:12px;color:#9a7aa5;font-weight:900}
+.mission .icon{font-size:31px;display:block;margin:9px 0}
+.mission strong{display:block;font-size:14px;margin-bottom:5px}
+.mission small{color:#88758d;line-height:1.4}
+.game-box{max-width:760px;margin:0 auto;background:linear-gradient(145deg,#fff0f4,#f6f0ff);border:1px solid #ead9ed;border-radius:28px;padding:clamp(20px,4vw,34px)}
+.game-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:13px;font-weight:900;color:#79549b}
+.progress{height:9px;background:#e6d9ed;border-radius:99px;overflow:hidden;margin:13px 0 24px}
+.progress span{height:100%;display:block;width:0;background:linear-gradient(90deg,#e994ad,#8ecb9d);transition:width .25s}
+.game-question{font-size:clamp(20px,3vw,27px);font-weight:900;line-height:1.4;margin:16px 0}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:18px 0}
+.answer{min-height:64px;border:2px solid #ead9ed;background:#fff;border-radius:16px;padding:13px;color:var(--plum);font-weight:900;text-align:left}
+.answer:hover:not(:disabled){border-color:#bca4dc;background:#fffafd}
+.answer.correct{background:#e4f6e5;border-color:#73b984}
+.answer.wrong{background:#ffe4e7;border-color:#d8899a}
+.answer:disabled{cursor:default}
+.feedback{min-height:52px;border-radius:15px;padding:14px;background:#fff;color:#6b5872;line-height:1.55}
+.feedback.good{background:#e8f7e8;color:#285b39}
+.feedback.bad{background:#fff0d8;color:#76501e}
+.quiz-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:17px;flex-wrap:wrap}
+.mini-note{font-size:13px;color:#806d85;line-height:1.6}
+.field{width:100%;padding:13px 14px;border:1px solid #ddcde2;border-radius:13px;background:#fff;color:var(--plum);margin:6px 0 14px}
+textarea.field{min-height:100px;resize:vertical}
+.label{font-weight:900;font-size:14px}
+.scale{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
+.scale button{width:45px;height:45px;border-radius:13px;border:1px solid #e1d0e8;background:#fff;font-weight:900;color:#6f4e89}
+.scale button.chosen{background:var(--purple);color:#fff}
+.result{text-align:center;padding:22px}
+.result .trophy{font-size:75px}
+.result-score{font-size:48px;color:var(--purple);font-weight:1000;margin:5px}
+.badge-reward{display:inline-block;padding:12px 18px;background:#ffedb8;border-radius:99px;font-weight:1000;color:#75571c}
+.footer{max-width:1120px;margin:auto;padding:0 18px 28px;color:#8c7b91;font-size:12px;text-align:center}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#493650;color:#fff;border-radius:14px;padding:12px 18px;box-shadow:var(--shadow);z-index:50;display:none;max-width:90%;text-align:center}
+@media(max-width:780px){
+ .nav-wrap{align-items:flex-start;flex-direction:column}.nav-links{justify-content:flex-start;width:100%;flex-wrap:nowrap;overflow-x:auto;padding-bottom:3px}
+ .nav-links button{white-space:nowrap}.hero{grid-template-columns:1fr;text-align:center}.hero-art{min-height:210px;grid-row:1}
+ .hero .lead{margin-left:auto;margin-right:auto}.hero-actions{justify-content:center}
+ .grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-map{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .story-layout{grid-template-columns:1fr}.story-layout .big-icon{order:-1}.clue-strip{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+ main{padding:15px 12px 36px}.grid-3,.grid-2{grid-template-columns:1fr}.stats{gap:7px}.stat{padding:12px 6px}.stat strong{font-size:21px}
+ .answers{grid-template-columns:1fr}.hero{padding:23px 17px}.hero-art{min-height:180px}.berry-mascot{font-size:125px}
+ .mission-map{gap:8px}.mission{padding:12px;min-height:130px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="site-header">
+ <div class="nav-wrap">
+  <button class="brand" onclick="showPage('home')" aria-label="Go to home">
+   <span class="brand-berry">🍓</span><span>DETECTIVE BERRY<small>The Great Fruit Hunt</small></span>
+  </button>
+  <nav class="nav-links" aria-label="Main navigation">
+   <button data-page="home" class="active">Home</button>
+   <button data-page="story">Case File</button>
+   <button data-page="learn">Learn</button>
+   <button data-page="games">Mini-Games</button>
+   <button data-page="practice">Practice</button>
+   <button data-page="feedback">Feedback</button>
+   <button data-page="closing">Rewards</button>
+   <button data-page="quiz">Final Quiz</button>
+  </nav>
+ </div>
+</header>
+<main>
+<!-- PAGE 1 -->
+<section id="home" class="page active">
+ <div class="hero">
+  <div>
+   <span class="eyebrow">🕵️ A Year 5 English Adventure</span>
+   <h1>Detective Berry's <span>Fruit Hunt</span></h1>
+   <p class="lead">Solve the mystery. Discover six fruits. Learn how fruit can be part of a healthy diet. Your next big adventure starts here, Junior Detective!</p>
+   <div class="hero-actions">
+    <button class="btn btn-primary" onclick="showPage('story')">Start the Hunt <span aria-hidden="true">→</span></button>
+    <button class="btn btn-secondary" onclick="showPage('learn')">Meet the Fruit Team 🍇</button>
+   </div>
+   <p class="mini-note" style="margin-top:17px">🔎 8 missions · 🍎 6 fruit clues · 🏆 1 detective badge</p>
+  </div>
+  <div class="hero-art" aria-label="Animated strawberry detective mascot">
+   <div class="orbit one">🍊</div><div class="orbit two">🍍</div><div class="orbit three">🍉</div>
+   <div class="berry-mascot" role="img" aria-label="Strawberry detective">🍓<span style="font-size:.42em;position:absolute;right:-5px;bottom:5px;transform:rotate(-18deg)">🕵️</span></div>
+  </div>
+ </div>
+ <div class="stats">
+  <div class="stat"><strong>6</strong><span>FRUIT CHARACTERS</span></div>
+  <div class="stat"><strong>3</strong><span>MINI-GAME TYPES</span></div>
+  <div class="stat"><strong>10</strong><span>FINAL QUIZ QUESTIONS</span></div>
+ </div>
+ <div class="panel">
+  <div class="section-head"><div><div class="kicker">Your adventure map</div><h2>Choose your next mission</h2><p>Complete each zone to become a Super Fruit Detective.</p></div><span class="pill" id="home-progress">0 missions completed</span></div>
+  <div class="mission-map">
+   <button class="mission" onclick="showPage('story')"><span class="num">MISSION 01</span><span class="icon">🧺</span><strong>The Missing Basket</strong><small>Read the mystery</small></button>
+   <button class="mission" onclick="showPage('learn')"><span class="num">MISSION 02</span><span class="icon">🍎</span><strong>Fruit Academy</strong><small>Learn the clues</small></button>
+   <button class="mission" onclick="showPage('games')"><span class="num">MISSION 03</span><span class="icon">🧩</span><strong>Mini-Game Garden</strong><small>Play and discover</small></button>
+   <button class="mission" onclick="showPage('practice')"><span class="num">MISSION 04</span><span class="icon">📝</span><strong>Evidence Lab</strong><small>Practise English</small></button>
+   <button class="mission" onclick="showPage('feedback')"><span class="num">MISSION 05</span><span class="icon">📔</span><strong>Detective Notebook</strong><small>Reflect and share</small></button>
+   <button class="mission" onclick="showPage('closing')"><span class="num">MISSION 06</span><span class="icon">🏅</span><strong>Case Closed</strong><small>Celebrate learning</small></button>
+   <button class="mission" onclick="showPage('quiz')"><span class="num">MISSION 07</span><span class="icon">🏆</span><strong>Final Investigation</strong><small>Test your knowledge</small></button>
+   <button class="mission" onclick="showPage('quiz')"><span class="num">BONUS</span><span class="icon">✨</span><strong>Detective Badge</strong><small>Earn 8/10 or more</small></button>
+  </div>
+ </div>
+</section>
+
+<!-- PAGE 2 -->
+<section id="story" class="page">
+ <div class="section-head"><div><div class="kicker">Case File #001</div><h2>The Missing Fruit Basket</h2><p>Read the story. Study the clues. What do you think happened?</p></div><span class="pill">🔎 Investigation 1</span></div>
+ <div class="story-layout">
+  <div class="story-card">
+   <p>It was a sunny morning in Berry's Garden. Detective Berry was preparing a healthy fruit basket for the Junior Detective Club.</p>
+   <p>Suddenly, the basket disappeared! Six mysterious clues were left behind: something red and round, something long and yellow, something orange and juicy, a bunch of little fruits, something green-striped, and a fruit with a spiky crown.</p>
+   <p><strong>“Hmm!”</strong> said Berry. <strong>“These clues must tell us something. Let's investigate!”</strong></p>
+   <p>Your mission is to identify the fruits and discover how they can be part of healthy food choices.</p>
+  </div>
+  <div class="panel" style="margin:0;background:#fff7e8">
+   <div class="big-icon">🧺</div><h3 style="text-align:center">The Evidence Table</h3>
+   <div class="clue-strip">
+    <div class="clue"><span>🔴</span><strong>Clue A</strong><br><small>Red and round</small></div>
+    <div class="clue"><span>〰️</span><strong>Clue B</strong><br><small>Long and curved</small></div>
+    <div class="clue"><span>👑</span><strong>Clue C</strong><br><small>Spiky crown</small></div>
+   </div>
+  </div>
+ </div>
+ <div class="panel">
+  <div class="kicker">Your first deduction</div><h3>What do the six clues represent?</h3>
+  <p class="mini-note">Choose one answer. Detective Berry will tell you if your guess is correct.</p>
+  <div class="answers" id="story-answers">
+   <button class="answer" onclick="storyAnswer(this,false)">Six different toys 🧸</button>
+   <button class="answer" onclick="storyAnswer(this,true)">Six different fruits 🍎</button>
+   <button class="answer" onclick="storyAnswer(this,false)">Six different animals 🐸</button>
+   <button class="answer" onclick="storyAnswer(this,false)">Six school bags 🎒</button>
+  </div>
+  <div class="feedback" id="story-feedback" aria-live="polite">🕵️ Look carefully at the clues. What could be red, juicy or have a spiky crown?</div>
+  <div class="button-row"><button class="btn btn-primary" onclick="showPage('learn')">Follow the clues →</button></div>
+ </div>
+</section>
+
+<!-- PAGE 3 -->
+<section id="learn" class="page">
+ <div class="section-head"><div><div class="kicker">Learning Zone</div><h2>Fruit Detective Academy</h2><p>Meet the six suspects and learn the English words to describe them.</p></div><span class="pill">🍓 Learn the clues</span></div>
+ <div class="grid-3">
+  <article class="fruit-card"><div class="fruit-top"><div class="fruit-emoji">🍎</div><div><h3>Apple</h3><span class="pill">Red / green</span></div></div><p>I am round. My skin can be red or green. I grow on a tree.</p><div class="fact">💡 Health clue: Apples provide fibre.</div><button class="btn btn-secondary" style="margin-top:12px" onclick="sayFact('Apple: I am round and can be red or green. Apples provide fibre.')">🔊 Read clue</button></article>
+  <article class="fruit-card"><div class="fruit-top"><div class="fruit-emoji">🍌</div><div><h3>Banana</h3><span class="pill">Yellow</span></div></div><p>I am long and curved. My peel is usually yellow when I am ripe.</p><div class="fact">💡 Health clue: Bananas provide potassium.</div><button class="btn btn-secondary" style="margin-top:12px" onclick="sayFact('Banana: I am long and curved. Bananas provide potassium.')">🔊 Read clue</button></article>
+  <article class="fruit-card"><div class="fruit-top"><div class="fruit-emoji">🍊</div><div><h3>Orange</h3><span class="pill">Juicy</span></div></div><p>I am round and orange. I have a juicy inside.</p><div class="fact">💡 Health clue: Oranges provide vitamin C.</div><button class="btn btn-secondary" style="margin-top:12px" onclick="sayFact('Orange: I am round and juicy. Oranges provide vitamin C.')">🔊 Read clue</button></article>
+  <article class="fruit-card"><div class="fruit-top"><div class="fruit-emoji">🍇</div><div><h3>Grapes</h3><span class="pill">A bunch</span></div></div><p>I am made up of small fruits. I can be green, red or purple.</p><div class="fact">💡 Health clue: Grapes contain water and other nutrients.</div><button class="btn btn-secondary" style="margin-top:12px" onclick="sayFact('Grapes: I grow in a bunch and can be green, red or purple.')">🔊 Read clue</button></article>
+  <article class="fruit-card"><div class="fruit-top"><div class="fruit-emoji">🍉</div><div><h3>Watermelon</h3><span class="pill">Green stripes</span></div></div><p>I am large, green outside and usually red inside. I contain plenty of water.</p><div class="fact">💡 Health clue: Watermelon contributes to hydration.</div><button class="btn btn-secondary" style="margin-top:12px" onclick="sayFact('Watermelon: I have green stripes and a juicy inside. I contain plenty of water.')">🔊 Read clue</button></article>
+  <article class="fruit-card"><div class="fruit-top"><div class="fruit-emoji">🍍</div><div><h3>Pineapple</h3><span class="pill">Spiky crown</span></div></div><p>I have a spiky crown and rough skin. My inside is juicy and yellow.</p><div class="fact">💡 Health clue: Pineapple provides vitamin C.</div><button class="btn btn-secondary" style="margin-top:12px" onclick="sayFact('Pineapple: I have a spiky crown and yellow flesh. Pineapple provides vitamin C.')">🔊 Read clue</button></article>
+ </div>
+ <div class="panel"><div class="kicker">English sentence builder</div><h3>Use these sentence starters</h3><div class="grid-3">
+  <div class="clue"><span>🟣</span><strong>It is…</strong><p class="mini-note">It is round and red.</p></div>
+  <div class="clue"><span>🟢</span><strong>It has…</strong><p class="mini-note">It has a spiky crown.</p></div>
+  <div class="clue"><span>🟡</span><strong>It provides…</strong><p class="mini-note">It provides vitamin C.</p></div>
+ </div><div class="button-row"><button class="btn btn-primary" onclick="showPage('games')">I’m ready to play →</button></div></div>
+</section>
+
+<!-- PAGE 4 -->
+<section id="games" class="page">
+ <div class="section-head"><div><div class="kicker">Interactive Activities</div><h2>Mini-Game Garden</h2><p>Choose a game, answer the clues and collect detective points.</p></div><span class="pill">🎮 Play to learn</span></div>
+ <div class="panel">
+  <div class="button-row" style="margin-top:0">
+   <button class="btn btn-primary" id="game-match" onclick="startGame('match')">🔎 Match the Clue</button>
+   <button class="btn btn-secondary" id="game-basket" onclick="startGame('basket')">🧺 Build the Basket</button>
+   <button class="btn btn-secondary" id="game-code" onclick="startGame('code')">🔐 Secret Code</button>
+  </div>
+  <p class="mini-note">Each game has six quick rounds. Correct answers earn one point. You can replay a game at any time.</p>
+ </div>
+ <div class="game-box">
+  <div class="game-meta"><span id="game-label">🔎 MATCH THE CLUE</span><span id="game-score">Score: 0</span></div>
+  <div class="progress"><span id="game-fill"></span></div>
+  <div id="game-stage">
+   <div class="game-question">Ready to investigate?</div><p>Choose a game above to begin.</p>
+  </div>
+  <div class="answers" id="game-answers"></div>
+  <div class="feedback" id="game-feedback" aria-live="polite">Every clue brings you closer to solving the case!</div>
+  <div class="quiz-footer"><span class="mini-note" id="game-count">6 clues to solve</span><button class="btn btn-primary" id="game-next" onclick="nextGame()">Next clue →</button></div>
+ </div>
+ <div class="button-row"><button class="btn btn-secondary" onclick="showPage('practice')">Continue to Evidence Lab →</button></div>
+</section>
+
+<!-- PAGE 5 -->
+<section id="practice" class="page">
+ <div class="section-head"><div><div class="kicker">Reinforcement</div><h2>The Evidence Lab</h2><p>Practise spelling, complete sentences and write a mini fruit report.</p></div><span class="pill">📝 Practice zone</span></div>
+ <div class="panel">
+  <div class="kicker">Exercise A · Complete the sentence</div>
+  <div id="fill-exercises">
+   <p class="label">1. An apple can be red or <input class="field" id="fill1" style="display:inline-block;width:130px;margin:4px" aria-label="Apple colour" placeholder="colour"/>.</p>
+   <p class="label">2. A banana is long and <input class="field" id="fill2" style="display:inline-block;width:130px;margin:4px" aria-label="Banana shape" placeholder="shape"/>.</p>
+   <p class="label">3. Watermelon contains plenty of <input class="field" id="fill3" style="display:inline-block;width:130px;margin:4px" aria-label="Watermelon content" placeholder="what?"/>.</p>
+  </div>
+  <button class="btn btn-primary" onclick="checkFill()">Check my answers</button>
+  <div class="feedback" id="fill-feedback" style="margin-top:13px" aria-live="polite">Fill in all three blanks, then check your answers.</div>
+ </div>
+ <div class="panel">
+  <div class="kicker">Exercise B · Fix the spelling</div><h3>Choose the correctly spelt word</h3>
+  <div class="grid-2">
+   <div class="clue"><span>🍎</span><p><strong>Which spelling is correct?</strong></p><div class="button-row" style="justify-content:center"><button class="btn btn-secondary" onclick="spell(this,false,'aple')">aple</button><button class="btn btn-secondary" onclick="spell(this,true,'apple')">apple</button></div><div class="mini-note" id="spell1"></div></div>
+   <div class="clue"><span>🍊</span><p><strong>Which spelling is correct?</strong></p><div class="button-row" style="justify-content:center"><button class="btn btn-secondary" onclick="spell(this,true,'orange')">orange</button><button class="btn btn-secondary" onclick="spell(this,false,'ornage')">ornage</button></div><div class="mini-note" id="spell2"></div></div>
+   <div class="clue"><span>🍌</span><p><strong>Which spelling is correct?</strong></p><div class="button-row" style="justify-content:center"><button class="btn btn-secondary" onclick="spell(this,false,'bananna')">bananna</button><button class="btn btn-secondary" onclick="spell(this,true,'banana')">banana</button></div><div class="mini-note" id="spell3"></div></div>
+   <div class="clue"><span>🍍</span><p><strong>Which spelling is correct?</strong></p><div class="button-row" style="justify-content:center"><button class="btn btn-secondary" onclick="spell(this,true,'pineapple')">pineapple</button><button class="btn btn-secondary" onclick="spell(this,false,'pinapple')">pinapple</button></div><div class="mini-note" id="spell4"></div></div>
+  </div>
+ </div>
+ <div class="panel">
+  <div class="kicker">Exercise C · Write your fruit report</div><h3>Tell Berry about your favourite fruit</h3>
+  <p class="mini-note">Use at least three sentences. Describe the fruit, its colour or shape, and one fact you learned.</p>
+  <label class="label" for="fruit-report">My fruit report</label>
+  <textarea id="fruit-report" class="field" placeholder="My favourite fruit is... It is... It provides..."></textarea>
+  <div class="quiz-footer"><span class="mini-note" id="word-count">0 words</span><button class="btn btn-mint" onclick="checkReport()">Check my report</button></div>
+  <div class="feedback" id="report-feedback" aria-live="polite">Your writing stays in this page and is not sent to your teacher.</div>
+ </div>
+ <div class="button-row"><button class="btn btn-primary" onclick="showPage('feedback')">Reflect on my learning →</button></div>
+</section>
+
+<!-- PAGE 6 -->
+<section id="feedback" class="page">
+ <div class="section-head"><div><div class="kicker">Feedback Zone</div><h2>Detective's Notebook</h2><p>Every detective learns something new. Tell us how your mission went.</p></div><span class="pill">📔 Reflect</span></div>
+ <div class="panel">
+  <div class="big-icon">📔</div>
+  <label class="label" for="enjoy">1. Which activity did you enjoy the most?</label>
+  <select class="field" id="enjoy"><option value="">Choose an activity</option><option>Matching fruit clues</option><option>Building the fruit basket</option><option>Secret code challenge</option><option>Evidence Lab</option><option>Final Quiz</option></select>
+  <label class="label" for="learned">2. What is one fruit fact you learned?</label>
+  <textarea class="field" id="learned" placeholder="I learned that..."></textarea>
+  <div class="label">3. How confident do you feel describing fruits in English?</div>
+  <div class="scale" id="confidence">
+   <button type="button" onclick="setConfidence(1,this)" aria-label="1, not confident yet">1</button>
+   <button type="button" onclick="setConfidence(2,this)" aria-label="2">2</button>
+   <button type="button" onclick="setConfidence(3,this)" aria-label="3">3</button>
+   <button type="button" onclick="setConfidence(4,this)" aria-label="4">4</button>
+   <button type="button" onclick="setConfidence(5,this)" aria-label="5, very confident">5</button>
+  </div>
+  <label class="label" for="improve">4. What would make this adventure even better? (Optional)</label>
+  <textarea class="field" id="improve" placeholder="I would like to..."></textarea>
+  <button class="btn btn-primary" onclick="submitFeedback()">Save my reflection</button>
+  <div class="feedback" id="feedback-result" style="margin-top:14px" aria-live="polite">Your answers will remain in this browser session. Use Google Forms if your teacher needs to collect responses.</div>
+ </div>
+ <div class="button-row"><button class="btn btn-secondary" onclick="showPage('closing')">Finish my reflection →</button></div>
+</section>
+
+<!-- PAGE 7 -->
+<section id="closing" class="page">
+ <div class="hero" style="grid-template-columns:1fr;text-align:center;background:linear-gradient(135deg,#e5f6e7,#fff0d5,#f8dfea);min-height:350px">
+  <div>
+   <span class="eyebrow">🎉 Investigation complete</span>
+   <div style="font-size:82px;margin:15px">🍓🍎🍌🍊🍇🍉🍍</div>
+   <h1 style="font-size:clamp(36px,6vw,58px)">Case <span>Closed!</span></h1>
+   <p class="lead" style="margin:auto">Congratulations, Junior Detective! You explored fruit clues, practised English and discovered how fruits contribute to a healthy diet.</p>
+   <div class="hero-actions" style="justify-content:center"><span class="badge-reward">🏅 SUPER FRUIT DETECTIVE</span></div>
+  </div>
+ </div>
+ <div class="grid-3" style="margin-top:20px">
+  <div class="fruit-card"><div class="fruit-emoji">🔤</div><h3>New Words</h3><p>You learned to name and describe six fruits in English.</p></div>
+  <div class="fruit-card"><div class="fruit-emoji">🧠</div><h3>Smart Thinking</h3><p>You used clues to identify fruits and solve challenges.</p></div>
+  <div class="fruit-card"><div class="fruit-emoji">🍎</div><h3>Healthy Choices</h3><p>You discovered that a variety of fruits can be part of a balanced diet.</p></div>
+ </div>
+ <div class="panel" style="text-align:center"><h2>Ready for the final investigation?</h2><p class="mini-note">Answer ten questions. Score at least 8 out of 10 to earn your quiz badge.</p><button class="btn btn-primary" onclick="startQuiz()">Take the Final Quiz →</button></div>
+</section>
+
+<!-- PAGE 8 -->
+<section id="quiz" class="page">
+ <div class="section-head"><div><div class="kicker">Self-Assessment</div><h2>The Final Investigation</h2><p>Ten questions stand between you and your Super Fruit Detective badge.</p></div><span class="pill">🏆 Aim for 8/10</span></div>
+ <div class="game-box">
+  <div id="quiz-area">
+   <div class="game-meta"><span>🍓 FINAL CASE</span><span id="quiz-score">Score: 0</span></div>
+   <div class="progress"><span id="quiz-fill"></span></div>
+   <div class="game-meta"><span id="quiz-count">Question 1 of 10</span><span>1 point each</span></div>
+   <div class="game-question" id="quiz-question">Ready to begin?</div>
+   <div class="answers" id="quiz-answers"></div>
+   <div class="feedback" id="quiz-feedback" aria-live="polite">Choose the best answer for each question.</div>
+   <div class="quiz-footer"><span class="mini-note">Read each question carefully.</span><button class="btn btn-primary" id="quiz-next" onclick="nextQuiz()">Start quiz →</button></div>
+  </div>
+  <div class="result" id="quiz-result" style="display:none" aria-live="polite">
+   <div class="trophy" id="result-trophy">🏆</div><h2 id="result-title">Case closed!</h2>
+   <div class="result-score" id="result-score">0/10</div><p id="result-message">Your results will appear here.</p>
+   <div id="result-badge"></div>
+   <div class="button-row" style="justify-content:center"><button class="btn btn-primary" onclick="startQuiz()">Try again</button><button class="btn btn-secondary" onclick="showPage('learn')">Review fruit clues</button></div>
+  </div>
+ </div>
+ <p class="mini-note" style="margin-top:15px">Note: This self-contained quiz calculates the score in the browser. It does not automatically send marks to a teacher or save results to a gradebook.</p>
+</section>
+</main>
+<footer class="footer">🍓 Detective Berry’s Fruit Hunt · Year 5 English · Learn, investigate and grow!</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const pageNames=['home','story','learn','games','practice','feedback','closing','quiz'];
+const completed=new Set();
+function showPage(id){
+ document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
+ document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+ if(id!=='home')completed.add(id);
+ document.getElementById('home-progress').textContent=completed.size+' missions explored';
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+function storyAnswer(btn,correct){
+ const wrap=document.getElementById('story-answers');
+ wrap.querySelectorAll('button').forEach(b=>{b.disabled=true;if(b===btn)b.classList.add(correct?'correct':'wrong')});
+ const f=document.getElementById('story-feedback');
+ f.className='feedback '+(correct?'good':'bad');
+ f.textContent=correct?'✅ Correct! The clues describe six different fruits. Follow Berry to the Fruit Detective Academy!':'🔎 Not quite. Think about the red, juicy fruit and the fruit with a spiky crown. Try the correct clue!';
+ if(!correct){setTimeout(()=>{wrap.querySelectorAll('button').forEach(b=>{b.disabled=false;b.classList.remove('wrong')});f.className='feedback';f.textContent='Try again, Junior Detective!'},1200)}
+}
+const fruits=[
+ {name:'Apple',emoji:'🍎',clue:'I am round. My skin can be red or green.',fact:'Apples provide fibre.'},
+ {name:'Banana',emoji:'🍌',clue:'I am long and curved. My peel is yellow when ripe.',fact:'Bananas provide potassium.'},
+ {name:'Orange',emoji:'🍊',clue:'I am round, orange and juicy.',fact:'Oranges provide vitamin C.'},
+ {name:'Grapes',emoji:'🍇',clue:'I grow in a bunch. I can be green, red or purple.',fact:'Grapes contain water and other nutrients.'},
+ {name:'Watermelon',emoji:'🍉',clue:'I have green stripes and a juicy red inside.',fact:'Watermelon contains plenty of water.'},
+ {name:'Pineapple',emoji:'🍍',clue:'I have a spiky crown and a rough outer skin.',fact:'Pineapple provides vitamin C.'}
+];
+function sayFact(text){
+ if('speechSynthesis' in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';speechSynthesis.speak(u)}
+ else showToast(text);
+}
+function showToast(text){const t=document.getElementById('toast');t.textContent=text;t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
+let gameMode='match',gameIndex=0,gameScore=0,gameAnswered=false,gameDone=false;
+const gameCodes=[
+ {q:'Decode the clue: “I am round and can be red or green.”',correct:'Apple',options:['Apple','Banana','Pineapple'],explain:'Apple is the correct answer. Apples can be red or green.'},
+ {q:'Decode the clue: “I am long and curved.”',correct:'Banana',options:['Orange','Banana','Grapes'],explain:'Banana is long and curved.'},
+ {q:'Which fruit is round, orange and juicy?',correct:'Orange',options:['Watermelon','Pineapple','Orange'],explain:'An orange is round and juicy.'},
+ {q:'Which fruit grows in a bunch?',correct:'Grapes',options:['Grapes','Apple','Banana'],explain:'Grapes grow in a bunch.'},
+ {q:'Which fruit has green stripes and a juicy inside?',correct:'Watermelon',options:['Orange','Watermelon','Pineapple'],explain:'Watermelon often has green stripes and a juicy inside.'},
+ {q:'Which fruit has a spiky crown?',correct:'Pineapple',options:['Apple','Grapes','Pineapple'],explain:'Pineapple has a spiky crown.'}
+];
+function startGame(mode){
+ gameMode=mode;gameIndex=0;gameScore=0;gameAnswered=false;gameDone=false;
+ ['match','basket','code'].forEach(m=>{const b=document.getElementById('game-'+m);b.className='btn '+(m===mode?'btn-primary':'btn-secondary')});
+ renderGame();
+}
+function renderGame(){
+ const labels={match:'🔎 MATCH THE CLUE',basket:'🧺 BUILD THE BASKET',code:'🔐 SECRET CODE'};
+ document.getElementById('game-label').textContent=labels[gameMode];
+ document.getElementById('game-score').textContent='Score: '+gameScore;
+ document.getElementById('game-fill').style.width=(gameIndex/6*100)+'%';
+ document.getElementById('game-count').textContent='Clue '+(gameIndex+1)+' of 6';
+ document.getElementById('game-next').textContent='Next clue →';
+ const f=fruits[gameIndex];
+ let question,options,correct,explain;
+ if(gameMode==='code'){const q=gameCodes[gameIndex];question=q.q;options=q.options;correct=q.correct;explain=q.explain}
+ else if(gameMode==='basket'){question='Add the right fruit to Berry’s basket: '+f.clue;options=[f.name,...fruits.filter(x=>x.name!==f.name).sort(()=>Math.random()-.5).slice(0,2).map(x=>x.name)].sort(()=>Math.random()-.5);correct=f.name;explain='You found '+f.name+'! '+f.fact}
+ else {question=f.clue;options=[f.name,...fruits.filter(x=>x.name!==f.name).sort(()=>Math.random()-.5).slice(0,2).map(x=>x.name)].sort(()=>Math.random()-.5);correct=f.name;explain=f.fact}
+ document.getElementById('game-stage').innerHTML='<div class="game-question">'+(gameMode==='basket'?'🧺 ':gameMode==='code'?'🔐 ':'🔎 ')+question+'</div>';
+ const area=document.getElementById('game-answers');area.innerHTML='';
+ options.forEach(name=>{const b=document.createElement('button');b.className='answer';b.textContent=(fruits.find(x=>x.name===name)?.emoji||'🍓')+' '+name;b.onclick=()=>answerGame(b,name===correct,correct,explain);area.appendChild(b)});
+ const feedback=document.getElementById('game-feedback');feedback.className='feedback';feedback.textContent='Choose the best answer to earn a detective point.';
+ document.getElementById('game-next').disabled=false;
+}
+function answerGame(btn,correct,answer,explain){
+ if(gameAnswered)return;gameAnswered=true;if(correct)gameScore++;
+ document.querySelectorAll('#game-answers button').forEach(b=>{b.disabled=true;if(b.textContent.includes(answer))b.classList.add('correct')});
+ if(!correct)btn.classList.add('wrong');
+ const f=document.getElementById('game-feedback');f.className='feedback '+(correct?'good':'bad');f.textContent=(correct?'✅ Correct! ':'🔎 The answer is '+answer+'. ')+explain;
+ document.getElementById('game-score').textContent='Score: '+gameScore;
+ document.getElementById('game-fill').style.width=((gameIndex+1)/6*100)+'%';
+ document.getElementById('game-next').textContent=gameIndex===5?'See results →':'Next clue →';
+}
+function nextGame(){
+ if(gameDone){startGame(gameMode);return}
+ if(!gameAnswered){showToast('Choose an answer first!');return}
+ if(gameIndex===5){gameDone=true;document.getElementById('game-stage').innerHTML='<div class="result"><div class="trophy">🌟</div><h2>Game complete!</h2><div class="result-score">'+gameScore+'/6</div><p>'+(gameScore>=5?'Fantastic detective work!':'Good effort! Review the clues and try again.')+'</p></div>';document.getElementById('game-answers').innerHTML='';document.getElementById('game-feedback').textContent='Choose another game or replay this one.';document.getElementById('game-next').textContent='Play again';document.getElementById('game-fill').style.width='100%';return}
+ gameIndex++;gameAnswered=false;renderGame();
+}
+function checkFill(){
+ const values=[document.getElementById('fill1').value.trim().toLowerCase(),document.getElementById('fill2').value.trim().toLowerCase(),document.getElementById('fill3').value.trim().toLowerCase()];
+ const answers=[['green'],['curved','bent'],['water']];
+ let score=0;values.forEach((v,i)=>{if(answers[i].includes(v))score++});
+ const f=document.getElementById('fill-feedback');f.className='feedback '+(score===3?'good':'bad');
+ f.textContent=score===3?'🌟 Perfect! You completed all three sentences correctly.':score+' out of 3 correct. Suggested answers: green, curved, water. Check your answers and try again.';
+}
+function spell(btn,correct,word){
+ const card=btn.closest('.clue');const out=card.querySelector('.mini-note');out.textContent=correct?'✅ Correct spelling: '+word+'.':'🔎 Check the letters and try the other option.';
+ out.style.color=correct?'#347348':'#9a642c';
+}
+const report=document.getElementById('fruit-report');
+report.addEventListener('input',()=>{const n=report.value.trim()?report.value.trim().split(/\s+/).length:0;document.getElementById('word-count').textContent=n+' words'});
+function checkReport(){
+ const t=report.value.trim();const words=t?t.split(/\s+/).length:0;
+ const f=document.getElementById('report-feedback');
+ if(words<12){f.className='feedback bad';f.textContent='Add a little more detail. Try writing at least three simple sentences about your fruit.';return}
+ const hasSentence=/[.!?]/.test(t);f.className='feedback '+(hasSentence?'good':'bad');
+ f.textContent=hasSentence?'Good start! Check that you have described your fruit and included a fact. Read your writing aloud to check it makes sense.':'Try adding full stops to separate your sentences.';
+}
+let confidence=0;
+function setConfidence(n,btn){confidence=n;document.querySelectorAll('#confidence button').forEach(b=>b.classList.remove('chosen'));btn.classList.add('chosen')}
+function submitFeedback(){
+ const enjoy=document.getElementById('enjoy').value,learned=document.getElementById('learned').value.trim();
+ const f=document.getElementById('feedback-result');
+ if(!enjoy||!learned||!confidence){f.className='feedback bad';f.textContent='Please answer Questions 1, 2 and 3 before saving your reflection.';return}
+ f.className='feedback good';f.textContent='📔 Reflection complete! Favourite activity: '+enjoy+'. Confidence: '+confidence+'/5. Your answers are only held in this page and are not sent to your teacher. To collect feedback, connect a Google Form.';
+}
+const quizQuestions=[
+ {q:'Which fruit is long and curved?',a:['Apple','Banana','Grapes','Orange'],c:1,e:'A banana is long and curved.'},
+ {q:'Which fruit usually grows in a bunch?',a:['Grapes','Watermelon','Pineapple','Apple'],c:0,e:'Grapes grow in a bunch.'},
+ {q:'Which fruit has a spiky crown?',a:['Orange','Apple','Pineapple','Banana'],c:2,e:'A pineapple has a spiky crown.'},
+ {q:'Which fruit is round and orange?',a:['Grapes','Orange','Watermelon','Banana'],c:1,e:'An orange is round and orange-coloured.'},
+ {q:'Which fruit often has green stripes and a red inside?',a:['Apple','Orange','Watermelon','Pineapple'],c:2,e:'Watermelon often has green stripes and a red inside.'},
+ {q:'Which fruit can have red or green skin?',a:['Apple','Pineapple','Banana','Grapes'],c:0,e:'Apples can be red or green.'},
+ {q:'Which vitamin do oranges provide?',a:['Vitamin C','Vitamin Z','No vitamins','Only salt'],c:0,e:'Oranges provide vitamin C.'},
+ {q:'Which fruit contains plenty of water?',a:['Pineapple','Watermelon','Grapes','Apple'],c:1,e:'Watermelon contains plenty of water.'},
+ {q:'Choose the correct sentence.',a:['A banana are curved.','A banana is curved.','A banana have curved.','Bananas is curved.'],c:1,e:'“A banana is curved” uses the correct subject-verb agreement.'},
+ {q:'Which is a thoughtful food choice?',a:['Eat only one type of fruit.','Never drink water.','Enjoy a variety of fruits.','Fruit is never useful.'],c:2,e:'Eating a variety of fruits can help provide different nutrients as part of a balanced diet.'}
+];
+let quizIndex=0,quizScore=0,quizAnswered=false;
+function startQuiz(){
+ quizIndex=0;quizScore=0;quizAnswered=false;
+ document.getElementById('quiz-area').style.display='block';document.getElementById('quiz-result').style.display='none';
+ showPage('quiz');renderQuiz();
+}
+function renderQuiz(){
+ const q=quizQuestions[quizIndex];quizAnswered=false;
+ document.getElementById('quiz-score').textContent='Score: '+quizScore;
+ document.getElementById('quiz-count').textContent='Question '+(quizIndex+1)+' of '+quizQuestions.length;
+ document.getElementById('quiz-fill').style.width=(quizIndex/quizQuestions.length*100)+'%';
+ document.getElementById('quiz-question').textContent=q.q;
+ const a=document.getElementById('quiz-answers');a.innerHTML='';
+ q.a.forEach((txt,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+i)+'. '+txt;b.onclick=()=>answerQuiz(b,i);a.appendChild(b)});
+ document.getElementById('quiz-feedback').className='feedback';document.getElementById('quiz-feedback').textContent='Choose the best answer.';
+ document.getElementById('quiz-next').textContent=quizIndex===quizQuestions.length-1?'View my result →':'Next question →';
+}
+function answerQuiz(btn,i){
+ if(quizAnswered)return;quizAnswered=true;const q=quizQuestions[quizIndex],correct=i===q.c;if(correct)quizScore++;
+ document.querySelectorAll('#quiz-answers button').forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct')});
+ if(!correct)btn.classList.add('wrong');
+ const f=document.getElementById('quiz-feedback');f.className='feedback '+(correct?'good':'bad');f.textContent=(correct?'✅ Correct! ':'🔎 Not quite. ')+q.e;
+ document.getElementById('quiz-score').textContent='Score: '+quizScore;
+ document.getElementById('quiz-fill').style.width=((quizIndex+1)/quizQuestions.length*100)+'%';
+}
+function nextQuiz(){
+ if(!quizAnswered){showToast('Choose an answer before continuing.');return}
+ if(quizIndex<quizQuestions.length-1){quizIndex++;renderQuiz();return}
+ showQuizResult();
+}
+function showQuizResult(){
+ document.getElementById('quiz-area').style.display='none';document.getElementById('quiz-result').style.display='block';
+ const passed=quizScore>=8;
+ document.getElementById('result-trophy').textContent=passed?'🏆':'🔎';
+ document.getElementById('result-title').textContent=passed?'Case closed, Super Detective!':'Keep investigating, Junior Detective!';
+ document.getElementById('result-score').textContent=quizScore+'/10';
+ document.getElementById('result-message').textContent=passed?'Amazing work! You reached the 80% target. You can identify fruit clues and use English to describe them.':'Good effort! Review the Fruit Detective Academy and try the quiz again. You need 8/10 to earn the badge.';
+ document.getElementById('result-badge').innerHTML=passed?'<span class="badge-reward">🍓 SUPER FRUIT DETECTIVE</span>':'<span class="pill">🌱 Keep practising!</span>';
+}
+startGame('match');
+</script>
+</body>
+</html>
